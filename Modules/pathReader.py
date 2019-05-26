@@ -3,9 +3,10 @@ import sys, getopt
 def getFilePaths(arguments):
    inputPath = ''
    outputPath = ''
+   columnHeader = ''
    try:
       # h:Help , i: for input, o: for ouput
-      opts, args = getopt.getopt(arguments,"hi:o:",["iPath=","oPath="]) 
+      opts, args = getopt.getopt(arguments,"hi:o:c:",["iPath=","oPath=","column="]) 
    except getopt.GetoptError: 
       print ('Error incorrect arguments format it should be \n excelMerger.py -i <inputfile> -o <outputfile>')
       sys.exit(2)
@@ -17,4 +18,6 @@ def getFilePaths(arguments):
          inputPath = arg
       elif opt in ("-o", "--oPath"):
          outputPath = arg
-   return (inputPath, outputPath)
+      elif opt in ("-c", "--column"):
+         columnHeader = arg
+   return (inputPath, outputPath, columnHeader)
