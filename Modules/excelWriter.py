@@ -30,3 +30,18 @@ def createFileByGroups(groups, file, outputPath):
       }
       excelFilesByGroups[group] = fileProperties
     return excelFilesByGroups
+
+def appendRowsToTable(inputFile, excelFilesByGroups, offsetRow = 0, offsetColumn = 1):
+    for group in excelFilesByGroups:
+        rows = excelFilesByGroups[group][constants.ROWS_KEY]
+        workbook = excelFilesByGroups[group][constants.WORKBOOK_KEY]
+        path = excelFilesByGroups[group][constants.PATH_KEY]
+        sheet = workbook.active
+        initialRow = sheet.max_row
+        for rowIndex, keys in enumerate(rows):
+            for columnIndex, value in enumerate(rows[keys]):
+                rowCoordinate = rowIndex + initialRow + offsetRow
+                columnCoordinate = columnIndex + offsetColumn
+                sheet.cell(row=rowCoordinate, column=columnCoordinate, value=value)
+        workbook.save(path)
+    return "Success"

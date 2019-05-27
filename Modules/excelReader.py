@@ -16,7 +16,6 @@ def constructFileNamesList(excelFiles, file, path):
 
 def getExcelFileNamesinPath(path):
     excelFileNames = []
-    #return another option [files for files in listdir(path) if isfile(join(path, files))]
     files = listdir(path)
     if len(files) > 0: 
         for file in files:
@@ -34,13 +33,13 @@ def openExcelAt(path):
     excelFilenames = getExcelFileNamesinPath(path)
     return constructFileList(excelFilenames)
 
-def findColumnWithValue(columnHeader, sheet):
+def findColumnLetterWithValue(columnHeader, sheet):
     for row in sheet.iter_rows():
         for cell in row:
             if cell.value == columnHeader:
                 return cell.column_letter
 
-def findRowWithValue(value, sheet):
+def getRowWithValue(value, sheet):
     rows = {}
     for row in sheet.iter_rows():
         values = []
@@ -63,12 +62,12 @@ def addToArrayifUnique(array, value, columnHeader):
 def getDifferentGroupsFile(file, columnHeader):
     sheet = file.active
     groups = []
-    columnLetter = findColumnWithValue(columnHeader , sheet)
+    columnLetter = findColumnLetterWithValue(columnHeader , sheet)
     for cell in sheet[columnLetter]:
         groups = addToArrayifUnique(groups, cell.value, columnHeader)
     return groups
 
 def extractAllRowsWithGroup(file, excelFilesByGroups):
     for group in excelFilesByGroups:
-        excelFilesByGroups[group][constants.ROWS_KEY] = findRowWithValue(group, file.active)
+        excelFilesByGroups[group][constants.ROWS_KEY] = getRowWithValue(group, file.active)
     return excelFilesByGroups
