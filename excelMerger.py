@@ -2,27 +2,11 @@
 import sys, getopt
 from pathlib import Path
 from openpyxl import Workbook, load_workbook
-from Modules import excelReader, pathReader, groupReader
+from Modules import excelReader, pathReader, groupReader, fileCreator
 
-def createExcelInPath(path):
-    wb = Workbook()
-    wb.save(path)
-    return wb
-
-def createFileIfRequired(name, outputPath):
-    excelName = name + ".xlsx"
-    excelFilesNames = excelReader.getExcelFileNamesinPath(outputPath)
-    finalPath = outputPath + '\\' + excelName
-    if len(excelFilesNames) < 1:
-        return createExcelInPath(finalPath), finalPath
-    for excelFileName in excelFilesNames:
-        if excelFileName.find(excelName) > -1:
-           return load_workbook(finalPath), finalPath
-    return createExcelInPath(finalPath), finalPath
-    
 def createFileByGroups(groups, file, outputPath):
     for group in groups:
-      excelFile, path = createFileIfRequired(group, outputPath)
+      excelFile, path = fileCreator.createFileIfRequired(group, outputPath)
       rows = extractAllRowsWithGroup(file, group)
       appendRowsToTable(file, excelFile, path, rows)
     return "lastRow"
@@ -56,9 +40,9 @@ def createExcelFileForGroup(inputFiles, outputPath, columnHeader):
 def main(arguments):
     inputPath, outputPath, columnHeader = pathReader.getFilePaths(arguments)
     inputExcelFiles = excelReader.openExcelAt(inputPath)
-    createExcelFileForGroup(inputExcelFiles, outputPath, columnHeader)
     print(inputPath)
     print(outputPath)
+    createExcelFileForGroup(inputExcelFiles, outputPath, columnHeader)
 
 if __name__ == "__main__":
     # Give me all the arguments if the program is the main
